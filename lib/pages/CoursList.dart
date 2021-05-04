@@ -51,14 +51,21 @@ class CoursList extends StatelessWidget
           ],
         ),
         body:
-        ListView.builder(
+        GridView.builder(
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 200,
+              childAspectRatio: 3 / 2,
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 20),
           itemCount: todos.length,
           itemBuilder: (context, index) {
             return ListTile(
-              title: Text(todos[index].title),
-              // When a user taps the ListTile, navigate to the DetailScreen.
-              // Notice that you're not only creating a DetailScreen, you're
-              // also passing the current todo to it.
+              title: Card(child: Column(
+                children: <Widget>[ // Ajout des items dnas les card
+                  Text(todos[index].title),
+                  Text(todos[index].description)
+                ],
+              ),),
               onTap: () {
                 Navigator.push(
                   context,
