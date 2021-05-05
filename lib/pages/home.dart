@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:gestion_notes/pages/login.dart';
 import 'package:gestion_notes/style/theme.dart' as Style;
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
 
 class HomePage extends StatefulWidget {
   @override
@@ -9,6 +12,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  String token = "";
+  Future<Null> getToken() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    token = prefs.getString('token');
+  }
+
+  @override
+  initState() {
+    super.initState();
+    token = "";
+    getToken();
+    print(token);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +44,58 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: Container(
-        child: Text("Page d'accueil"),
+        padding: EdgeInsets.fromLTRB(5.0,20,5,5),
+        child: GridView.count(
+            crossAxisCount: 2,
+            mainAxisSpacing: 10.0,
+            crossAxisSpacing: 10.0,
+          primary: false,
+          children: [
+
+            Card(
+              child: Column(
+                children: [
+                  Image.asset(
+                    "assets/images/book.png", height: 123,
+                  ),
+                  Text("Courses")
+                ],
+              ),
+            ),
+
+            Card(
+              child: Column(
+                children: [
+                  Image.asset(
+                    "assets/images/board.png", height: 123,
+                  ),
+                  Text("Planning")
+                ],
+              ),
+            ),
+            Card(
+              child: Column(
+                children: [
+                  Image.asset(
+                    "assets/images/programming.png", height: 123,
+                  ),
+                  Text("Code")
+                ],
+              ),
+            ),
+            Card(
+              child: Column(
+                children: [
+                  Image.asset(
+                    "assets/images/board.png", height: 123,
+                  ),
+                  Text("Autres")
+                ],
+              ),
+            ),
+            Text(token)
+          ],
+        )
       ),
       drawer: Drawer(
         child: ListView(
@@ -101,3 +170,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+// Future<List<User>>getUser(){
+//   final Uri baseUrl =
+//   Uri.parse("https://api-ccnb-gestion-notes.herokuapp.com/api/user/profile");
+//   var response = await http.get(baseUrl);
+//   print(response.statusCode);
+//
+// }
