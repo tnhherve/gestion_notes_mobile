@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gestion_notes/pages/home.dart';
 import 'package:gestion_notes/pages/register.dart';
+import 'package:gestion_notes/services/api_manager.dart';
 import 'package:gestion_notes/style/theme.dart' as Style;
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -33,28 +34,32 @@ class Login extends StatelessWidget {
             padding: const EdgeInsets.only(right: 20.0, left: 20.0, top: 80.0),
             child: Form(
               key: _formKey,
-              child: Column(
+              child: ListView(
                 children: [
                   Container(
                       height: 100.0,
                       padding: EdgeInsets.only(bottom: 20.0, top: 30.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      child: ListView(
+                        // mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            "Quick note",
-                            style: TextStyle(
-                                color: Style.Colors.mainColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 24.0),
+                          Center(
+                            child: Text(
+                              "Quick note",
+                              style: TextStyle(
+                                  color: Style.Colors.mainColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24.0),
+                            ),
                           ),
                           SizedBox(
                             height: 5.0,
                           ),
-                          Text(
-                            "By groupe 2",
-                            style: TextStyle(
-                                fontSize: 10.0, color: Colors.white),
+                          Center(
+                            child: Text(
+                              "By groupe 2",
+                              style: TextStyle(
+                                  fontSize: 10.0, color: Style.Colors.mainColor),
+                            ),
                           )
                         ],
                       )),
@@ -174,20 +179,21 @@ class Login extends StatelessWidget {
                                         backgroundColor: Colors.red,
                                       ),);
 
-                                    Future.delayed(Duration(seconds: 3), () {
+                                    Future.delayed(Duration(seconds: 5), () {
                                       Loader.hide();
                                     });
                                     String message = null;
-                                    message =await login(_emailController.text,
+                                    message = await API_Manager().login(_emailController.text,
                                         _passwordController.text);
 
-                                    print(message);
+                                    //print(message);
                                     if (message != 'unauthorized'){
-                                      //await storage.write(key: "token", value: message);
+
                                       SharedPreferences prefs = await SharedPreferences.getInstance();
+                                      //print(prefs.getString("token"));
                                       await prefs.setString("token", message);
                                       Navigator.pushReplacement(context,
-                                      new MaterialPageRoute(builder: (context)=> new HomePage()));
+                                       new MaterialPageRoute(builder: (context)=> new HomePage()));
                                     }
                                     else{
                                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('email ou mot de passe incorrect'),));
@@ -330,27 +336,4 @@ class Login extends StatelessWidget {
   }
 }
 
-Future<String> login(String email, String password) async {
-  final Uri baseUrl =
-      Uri.parse("https://api-ccnb-gestion-notes.herokuapp.com/api/user/login");
-  var response = await http.post(baseUrl, headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
-  }, body: {
-    "email": email,
-    "password": password
-  });
-  print(response.statusCode);
-  if (response.statusCode == 200) {
-    var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
-    print("success");
-    return jsonResponse['access_token'];
-  }
-  else if (response.statusCode == 401) {
-    var jsonResponse = convert.jsonDecode(response.body) as Map<String, dynamic>;
-    print("Erreur");
-    print(jsonResponse);
-    return jsonResponse['error'];
-  }else{
-    
-  }
-}
+

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gestion_notes/services/api_manager.dart';
 import 'package:gestion_notes/style/theme.dart' as Style;
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 
@@ -58,28 +59,32 @@ class _RegisterState extends State<Register> {
             padding: const EdgeInsets.only(right: 20.0, left: 20.0, top: 10.0),
             child: Form(
               key: _formKey,
-              child: Column(
+              child: ListView(
                 children: [
                   Container(
                       height: 110.0,
                       padding: EdgeInsets.only(bottom: 20.0, top: 30.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      child: ListView(
+                        //mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            "Creation de compte",
-                            style: TextStyle(
-                                color: Style.Colors.mainColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 24.0),
+                          Center(
+                            child: Text(
+                              "Creation de compte",
+                              style: TextStyle(
+                                  color: Style.Colors.mainColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24.0),
+                            ),
                           ),
                           SizedBox(
                             height: 5.0,
                           ),
-                          Text(
-                            "By groupe 2",
-                            style: TextStyle(
-                                fontSize: 10.0, color: Colors.black38),
+                          Center(
+                            child: Text(
+                              "By groupe 2",
+                              style: TextStyle(
+                                  fontSize: 10.0, color: Colors.black38),
+                            ),
                           )
                         ],
                       )),
@@ -363,7 +368,7 @@ class _RegisterState extends State<Register> {
                                       Loader.hide();
                                     });
                                     bool message = false;
-                                    message =await login(_nomTextController.text,_prenomTextController.text,_emailTextController.text,
+                                    message =await API_Manager().register(_nomTextController.text,_prenomTextController.text,_emailTextController.text,
                                         _telephoneTextController.text,_dateNaissanceTextController.text,_passwordTextController.text);
 
                                     print(message);
@@ -430,29 +435,5 @@ class _RegisterState extends State<Register> {
         ],
       ),
     );
-  }
-}
-
-Future<bool> login(String nom, String prenom, String email, String phone, String dateN, String password, ) async {
-  final Uri baseUrl =
-  Uri.parse("https://api-ccnb-gestion-notes.herokuapp.com/api/user/register");
-  var response = await http.post(baseUrl, headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
-  }, body: {
-    "nom" : nom,
-    "prenom": prenom,
-    "telephone": phone,
-    "date_naissance": dateN,
-    "email": email,
-    "password": password
-  });
-  print(response.statusCode);
-  if (response.statusCode == 200) {
-    print(response.body);
-    return true;
-  }
-  else {
-    print(response.body);
-    return false;
   }
 }
