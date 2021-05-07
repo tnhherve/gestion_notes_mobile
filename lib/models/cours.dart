@@ -1,25 +1,25 @@
 // To parse this JSON data, do
 //
-//     final cours = coursFromJson(jsonString);
+//     final coursResponse = coursResponseFromJson(jsonString);
 
 import 'dart:convert';
 
-Cours coursFromJson(String str) => Cours.fromJson(json.decode(str));
+CoursResponse coursResponseFromJson(String str) => CoursResponse.fromJson(json.decode(str));
 
-String coursToJson(Cours data) => json.encode(data.toJson());
+String coursResponseToJson(CoursResponse data) => json.encode(data.toJson());
 
-class Cours {
-  Cours({
+class CoursResponse {
+  CoursResponse({
     this.status,
     this.data,
   });
 
   bool status;
-  List<Datum> data;
+  List<Cours> data;
 
-  factory Cours.fromJson(Map<String, dynamic> json) => Cours(
+  factory CoursResponse.fromJson(Map<String, dynamic> json) => CoursResponse(
     status: json["status"],
-    data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+    data: List<Cours>.from(json["data"].map((x) => Cours.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -28,8 +28,8 @@ class Cours {
   };
 }
 
-class Datum {
-  Datum({
+class Cours {
+  Cours({
     this.id,
     this.userId,
     this.sectionId,
@@ -47,7 +47,7 @@ class Datum {
   DateTime createdAt;
   DateTime updatedAt;
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory Cours.fromJson(Map<String, dynamic> json) => Cours(
     id: json["id"],
     userId: json["user_id"],
     sectionId: json["section_id"],

@@ -104,7 +104,7 @@ class API_Manager {
     return user;
   }
 
-  Future<Cours> getUserCourses() async {
+  Future<CoursResponse> getUserCourses() async {
     final Uri baseUrl =
     Uri.parse(BASE_URL+"/user/cours");
     var response = await http.get(
@@ -121,7 +121,7 @@ class API_Manager {
       var jsonString = response.body;
       var jsonMap = convert.jsonDecode(jsonString);
       //print(jsonMap);
-      cours = Cours.fromJson(jsonMap);
+      cours = CoursResponse.fromJson(jsonMap);
       //print(cours);
     }
     else{
@@ -133,7 +133,34 @@ class API_Manager {
     return cours;
   }
 
-  Future<bool> addCours(String nomC, String section, String seuil) async{
+  Future<Cours> deleteCours(int id) async {
+    final Uri baseUrl =
+    Uri.parse(BASE_URL+"/cours/${id}");
+    var response = await http.delete(
+        baseUrl,
+        headers: {
+          HttpHeaders.authorizationHeader: "Bearer ${await getToken()}",
+        }
+    );
+    var cours = null;
+    print(response.statusCode);
+    print("${baseUrl}/${await getToken()}");
+    if (response.statusCode == 200){
+      var jsonString = response.body;
+      var jsonMap = convert.jsonDecode(jsonString);
+      print(jsonMap);
+      cours = Cours.fromJson(jsonMap['data']);
+    }
+    else{
+      var jsonString = response.body;
+      var jsonMap = convert.jsonDecode(jsonString);
+      print(jsonMap);
+    }
+
+    return cours;
+  }
+
+  Future<Cours> addCours(String nomC, String section, String seuil) async{
     final Uri baseUrl =
     Uri.parse(BASE_URL+"/user/cours");
     var response = await http.post(
@@ -147,13 +174,13 @@ class API_Manager {
           HttpHeaders.authorizationHeader: "Bearer ${await getToken()}",
         }
     );
-    var status = false;
-
+    var cours = null;
+  print("${baseUrl}/${await getToken()}");
     if (response.statusCode == 200){
       var jsonString = response.body;
       var jsonMap = convert.jsonDecode(jsonString);
       print(jsonMap);
-      status = true;
+      cours = Cours.fromJson(jsonMap['data']);
     }
     else{
       var jsonString = response.body;
@@ -161,7 +188,7 @@ class API_Manager {
       print(jsonMap);
     }
 
-    return status;
+    return cours;
   }
 
   Future<bool> logout(String token) async {

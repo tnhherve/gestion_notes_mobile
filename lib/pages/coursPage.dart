@@ -29,7 +29,8 @@ class _CoursPageState extends State<CoursPage> {
       appBar: AppBar(title: Text("Cours"),),
       body: Container(
           padding: EdgeInsets.all(8),
-          child: Obx(()=> ListView.builder(
+          child: GetX<CoursController>(
+                builder:(_)=> ListView.builder(
             padding: const EdgeInsets.all(5.0),
               itemCount: _coursController.coursList.value.data.length,
               itemBuilder: (context, index) {
@@ -37,7 +38,15 @@ class _CoursPageState extends State<CoursPage> {
                   child: Dismissible(
                     key: ValueKey(_coursController.coursList.value.data[index].id),
                     direction: DismissDirection.startToEnd,
-                    onDismissed: (direction) {},
+                    onDismissed: (direction) async {
+                      bool delete = await _coursController.deleteCours(_coursController.coursList.value.data[index].id);
+                      if (delete)
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('cours ${_coursController.coursList.value.data[index].nomCours} supprimer'),));
+                      else
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erreur lors de la suppression'),));
+                      //this.initState();
+
+                    },
                     confirmDismiss: (direction) async {
                       final result = await showDialog(
                           context: context, builder: (_) => CoursDelete());
@@ -58,7 +67,7 @@ class _CoursPageState extends State<CoursPage> {
                     child: ListTile(
                       leading: Image.asset("assets/images/book.png", height: 70, ),
                       title: Text(_coursController.coursList.value.data[index].nomCours),
-                      subtitle: Text("${_coursController.coursList.value.data[index].seuilReussite}%"),
+                      subtitle: Text("Seuil de reussite: ${_coursController.coursList.value.data[index].seuilReussite}%"),
                       trailing: Icon(Icons.more_vert),
                       isThreeLine: true,
                       onTap: (){
@@ -202,7 +211,7 @@ class _CoursPageState extends State<CoursPage> {
                         if (_formKey.currentState.validate()) {
                           double seuil = double.parse(_seuilTextEditingController.text);
 
-                          bool response = await API_Manager().addCours(_nomCoursTextEditingController.text,
+                          bool response = await _coursController.addCours(_nomCoursTextEditingController.text,
                               _sectionTextEditingController.text, _seuilTextEditingController.text);
 
                           if (response){
@@ -211,10 +220,10 @@ class _CoursPageState extends State<CoursPage> {
                                 backgroundColor: Colors.red,
                               ),);
 
-                            Future.delayed(Duration(seconds: 5), () {
+                            Future.delayed(Duration(seconds: 3), () {
                               Loader.hide();
                             });
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Connexion'),));
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Enregistrer avec succes'),));
                           }else{
                             Loader.show(context,
                               progressIndicator: CircularProgressIndicator(
@@ -226,7 +235,7 @@ class _CoursPageState extends State<CoursPage> {
                             });
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erreur lors de la creation du cours'),));
                           }
-                          Navigator.of(context).pop();
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> CoursPage()));
                         }
                       }
                   ),
