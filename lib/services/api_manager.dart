@@ -133,6 +133,37 @@ class API_Manager {
     return cours;
   }
 
+  Future<bool> addCours(String nomC, String section, String seuil) async{
+    final Uri baseUrl =
+    Uri.parse(BASE_URL+"/user/cours");
+    var response = await http.post(
+        baseUrl,
+        body: {
+          "nom_cours":nomC,
+          "section_id": section,
+          "seuil_reussite": seuil
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: "Bearer ${await getToken()}",
+        }
+    );
+    var status = false;
+
+    if (response.statusCode == 200){
+      var jsonString = response.body;
+      var jsonMap = convert.jsonDecode(jsonString);
+      print(jsonMap);
+      status = true;
+    }
+    else{
+      var jsonString = response.body;
+      var jsonMap = convert.jsonDecode(jsonString);
+      print(jsonMap);
+    }
+
+    return status;
+  }
+
   Future<bool> logout(String token) async {
     final Uri baseUrl =
     Uri.parse(BASE_URL+"/user/logout");
