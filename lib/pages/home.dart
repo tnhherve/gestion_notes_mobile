@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:gestion_notes/controllers/userControllers.dart';
 import 'package:gestion_notes/models/user.dart';
+import 'package:gestion_notes/pages/coursPage.dart';
 import 'package:gestion_notes/pages/login.dart';
 import 'package:gestion_notes/services/api_manager.dart';
 import 'package:gestion_notes/style/theme.dart' as Style;
@@ -85,6 +86,8 @@ class _HomePageState extends State<HomePage> {
               child: InkWell(
                 onTap: (){
                   API_Manager().getUserCourses();
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context)=> CoursPage()));
                 },
                 child: Column(
                   children: [

@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:gestion_notes/models/cours.dart';
 import 'package:gestion_notes/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -103,7 +104,7 @@ class API_Manager {
     return user;
   }
 
-  Future<Void> getUserCourses() async {
+  Future<Cours> getUserCourses() async {
     final Uri baseUrl =
     Uri.parse(BASE_URL+"/user/cours");
     var response = await http.get(
@@ -114,18 +115,22 @@ class API_Manager {
           HttpHeaders.authorizationHeader: "Bearer ${await getToken()}",
         }
     );
+    var cours = null;
 
     if (response.statusCode == 200){
       var jsonString = response.body;
       var jsonMap = convert.jsonDecode(jsonString);
-      print(jsonMap);
-      print(baseUrl);
-      print(await getToken());
+      //print(jsonMap);
+      cours = Cours.fromJson(jsonMap);
+      //print(cours);
     }
     else{
       var jsonString = response.body;
-      print(jsonString);
+      var jsonMap = convert.jsonDecode(jsonString);
+      print(jsonMap);
     }
+
+    return cours;
   }
 
   Future<bool> logout(String token) async {

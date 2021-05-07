@@ -2,7 +2,7 @@
 import 'package:gestion_notes/models/user.dart';
 import 'package:gestion_notes/services/api_manager.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 class UserController extends GetxController{
   var user = User().obs;
