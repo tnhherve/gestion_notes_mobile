@@ -21,6 +21,12 @@ class _CoursPageState extends State<CoursPage> {
   TextEditingController _sectionTextEditingController = TextEditingController();
   TextEditingController _seuilTextEditingController = TextEditingController();
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _coursController.fetchUserCourses();
+  }
 
 
   @override
@@ -29,8 +35,7 @@ class _CoursPageState extends State<CoursPage> {
       appBar: AppBar(title: Text("Cours"),),
       body: Container(
           padding: EdgeInsets.all(8),
-          child: GetX<CoursController>(
-                builder:(_)=> ListView.builder(
+          child: Obx(()=> ListView.builder(
             padding: const EdgeInsets.all(5.0),
               itemCount: _coursController.coursList.value.data.length,
               itemBuilder: (context, index) {
@@ -40,11 +45,16 @@ class _CoursPageState extends State<CoursPage> {
                     direction: DismissDirection.startToEnd,
                     onDismissed: (direction) async {
                       bool delete = await _coursController.deleteCours(_coursController.coursList.value.data[index].id);
-                      if (delete)
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('cours ${_coursController.coursList.value.data[index].nomCours} supprimer'),));
-                      else
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erreur lors de la suppression'),));
-                      //this.initState();
+                      if (delete) {
+                        await _coursController.fetchUserCourses();
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              'cours ${_coursController.coursList.value
+                                  .data[index].nomCours} supprimer'),));
+                      }else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('Erreur lors de la suppression'),));
+                      }
 
                     },
                     confirmDismiss: (direction) async {
@@ -181,7 +191,7 @@ class _CoursPageState extends State<CoursPage> {
                               new BorderSide(color: Colors.lightBlue),
                               borderRadius: BorderRadius.circular(30.0)),
                           contentPadding: EdgeInsets.only(left: 10.0, right: 10.0),
-                          labelText: "Seuit reussite",
+                          labelText: "Seuil reussite",
                           hintStyle: TextStyle(
                               fontSize: 12.0,
                               color: Colors.grey,
@@ -212,9 +222,10 @@ class _CoursPageState extends State<CoursPage> {
                           double seuil = double.parse(_seuilTextEditingController.text);
 
                           bool response = await _coursController.addCours(_nomCoursTextEditingController.text,
-                              _sectionTextEditingController.text, _seuilTextEditingController.text);
+                              _sectionTextEditingController.text, seuil);
 
                           if (response){
+
                             Loader.show(context,
                               progressIndicator: CircularProgressIndicator(
                                 backgroundColor: Colors.red,
@@ -224,6 +235,7 @@ class _CoursPageState extends State<CoursPage> {
                               Loader.hide();
                             });
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Enregistrer avec succes'),));
+                            _coursController.fetchUserCourses();
                           }else{
                             Loader.show(context,
                               progressIndicator: CircularProgressIndicator(

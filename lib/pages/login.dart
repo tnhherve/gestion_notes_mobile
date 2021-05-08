@@ -189,9 +189,9 @@ class Login extends StatelessWidget {
                                     //print(message);
                                     if (message != 'unauthorized'){
 
-                                      SharedPreferences prefs = await SharedPreferences.getInstance();
-                                      //print(prefs.getString("token"));
-                                      await prefs.setString("token", message);
+                                      await API_Manager.deleteToken();
+
+                                      await API_Manager.writeToken(message);
                                       Navigator.pushReplacement(context,
                                        new MaterialPageRoute(builder: (context)=> new HomePage()));
                                     }

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
+import 'package:gestion_notes/controllers/coursController.dart';
 import 'package:gestion_notes/controllers/userControllers.dart';
 import 'package:gestion_notes/models/user.dart';
 import 'package:gestion_notes/pages/coursPage.dart';
@@ -22,7 +23,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
    UserController userController = Get.put(UserController());
-
+   CoursController coursController = Get.put(CoursController());
 
   // User user = null ;
   //
@@ -37,24 +38,14 @@ class _HomePageState extends State<HomePage> {
   //   user = await API_Manager().getUser(toke);
   // }
   //
-  // @override
-  // initState() {
-  //
-  //   token = "";
-  //   getToken();
-  //   print(token);
-  //   getUser(token);
-  //   print(user);
-  //   super.initState();
-  //
-  // }
 
-  // void initState() {
-  //   // TODO: implement initState
-  //
-  //   userController.connectUser();
-  //
-  // }
+
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    userController.connectUser();
+    coursController.fetchUserCourses();
+  }
 
 
   @override
@@ -85,7 +76,7 @@ class _HomePageState extends State<HomePage> {
             Card(
               child: InkWell(
                 onTap: (){
-                  API_Manager().getUserCourses();
+                  coursController.fetchUserCourses();
                   Navigator.of(context).push(
                       MaterialPageRoute(builder: (context)=> CoursPage()));
                 },
@@ -218,8 +209,8 @@ class _HomePageState extends State<HomePage> {
                   Future.delayed(Duration(seconds: 3), () {
                     Loader.hide();
                   });
-                  SharedPreferences prefs = await SharedPreferences.getInstance();
-                  prefs.clear();
+                  await API_Manager.deleteToken();
+                  print(await API_Manager.getToken());
                   Navigator.pushReplacement(
                       context, MaterialPageRoute(builder: (context) => Login()));
                 }

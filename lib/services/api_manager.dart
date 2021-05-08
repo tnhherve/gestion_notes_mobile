@@ -14,9 +14,22 @@ class API_Manager {
   final String BASE_URL = "https://api-ccnb-gestion-notes.herokuapp.com/api";
 
   static Future<String> getToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     var  token= prefs.getString('token');
-    return token;
+    if(token != null)
+      return token;
+    else
+      return "";
+  }
+
+  static Future<void> deleteToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+  }
+
+  static Future<void> writeToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token',token);
   }
 
   Future<String> login(String email, String password) async {
@@ -160,7 +173,7 @@ class API_Manager {
     return cours;
   }
 
-  Future<Cours> addCours(String nomC, String section, String seuil) async{
+  Future<bool> addCours(String nomC, String section, double seuil) async{
     final Uri baseUrl =
     Uri.parse(BASE_URL+"/user/cours");
     var response = await http.post(
@@ -168,19 +181,19 @@ class API_Manager {
         body: {
           "nom_cours":nomC,
           "section_id": section,
-          "seuil_reussite": seuil
+          "seuil_reussite": seuil.toString()
         },
         headers: {
           HttpHeaders.authorizationHeader: "Bearer ${await getToken()}",
         }
     );
-    var cours = null;
+    bool cours = false;
   print("${baseUrl}/${await getToken()}");
     if (response.statusCode == 200){
       var jsonString = response.body;
       var jsonMap = convert.jsonDecode(jsonString);
       print(jsonMap);
-      cours = Cours.fromJson(jsonMap['data']);
+      cours = true;
     }
     else{
       var jsonString = response.body;

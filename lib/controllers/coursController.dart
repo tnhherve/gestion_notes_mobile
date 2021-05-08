@@ -10,14 +10,14 @@ class CoursController extends GetxController{
     if (cours != null){
       coursList = cours.obs;
       print(cours.data);
-      update();
+
     }
   }
 
-  Future<bool> addCours(String nomC, String section, String seuil) async {
-    Cours cours = await API_Manager().addCours(nomC, section, seuil);
-    if (cours != null){
-      coursList.value.data.add(cours.obs.value);
+  Future<bool> addCours(String nomC, String section, double seuil) async {
+    bool cours = await API_Manager().addCours(nomC, section, seuil);
+    if (cours){
+     await fetchUserCourses();
       update();
       return true;
     }
@@ -30,7 +30,7 @@ class CoursController extends GetxController{
     Cours cours = await API_Manager().deleteCours(id);
     if (cours != null){
       coursList.value.data.remove(cours.obs.value);
-      update();
+
       return true;
     }
     else
@@ -43,7 +43,7 @@ class CoursController extends GetxController{
     // TODO: implement onInit
     super.onInit();
     fetchUserCourses();
-    update(coursList.value.data);
+
   }
 }
 
