@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gestion_notes/models/cours.dart';
+import 'package:gestion_notes/models/evaluation.dart';
+import 'package:gestion_notes/models/evenement.dart';
 import 'package:gestion_notes/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -117,6 +119,29 @@ class API_Manager {
     return user;
   }
 
+  Future<bool> logout(String token) async {
+    final Uri baseUrl =
+    Uri.parse(BASE_URL+"/user/logout");
+    var response = await http.post(
+        baseUrl,
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.acceptHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer ${token}",
+        }
+    );
+
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print(response.body);
+      return true;
+    }
+    else {
+      print(baseUrl);
+      return false;
+    }
+  }
+
   Future<CoursResponse> getUserCourses() async {
     final Uri baseUrl =
     Uri.parse(BASE_URL+"/user/cours");
@@ -204,27 +229,37 @@ class API_Manager {
     return cours;
   }
 
-  Future<bool> logout(String token) async {
+  Future<EvaluationResponse> getEvaluationsCours(int id) async {
     final Uri baseUrl =
-    Uri.parse(BASE_URL+"/user/logout");
-    var response = await http.post(
+    Uri.parse(BASE_URL+"/cours/${id}/evaluations");
+    var response = await http.get(
         baseUrl,
         headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.acceptHeader: "application/json",
-          HttpHeaders.authorizationHeader: "Bearer ${token}",
+          HttpHeaders.authorizationHeader: "Bearer ${await getToken()}",
         }
     );
+    var evaluations = null;
 
-    print(response.statusCode);
-    if (response.statusCode == 200) {
-      print(response.body);
-      return true;
+    if (response.statusCode == 200){
+      var jsonString = response.body;
+      var jsonMap = convert.jsonDecode(jsonString);
+      //print(jsonMap);
+      evaluations = EvaluationResponse.fromJson(jsonMap);
+      //print(cours);
     }
-    else {
-      print(baseUrl);
-      return false;
+    else{
+      var jsonString = response.body;
+      var jsonMap = convert.jsonDecode(jsonString);
+      print(jsonMap);
     }
+
+    return evaluations;
+  }
+
+  Future<EvenementResponse> getEvenementUser() async{
+
   }
 
 }

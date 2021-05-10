@@ -41,7 +41,7 @@ class _CoursPageState extends State<CoursPage> {
               itemBuilder: (context, index) {
                 return Card(
                   child: Dismissible(
-                    key: ValueKey(_coursController.coursList.value.data[index].id),
+                    key: ValueKey(_coursController.coursList.value.data[index]),
                     direction: DismissDirection.startToEnd,
                     onDismissed: (direction) async {
                       bool delete = await _coursController.deleteCours(_coursController.coursList.value.data[index].id);
@@ -225,7 +225,7 @@ class _CoursPageState extends State<CoursPage> {
                               _sectionTextEditingController.text, seuil);
 
                           if (response){
-
+                            _coursController.fetchUserCourses();
                             Loader.show(context,
                               progressIndicator: CircularProgressIndicator(
                                 backgroundColor: Colors.red,
@@ -235,7 +235,7 @@ class _CoursPageState extends State<CoursPage> {
                               Loader.hide();
                             });
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Enregistrer avec succes'),));
-                            _coursController.fetchUserCourses();
+
                           }else{
                             Loader.show(context,
                               progressIndicator: CircularProgressIndicator(
@@ -247,7 +247,13 @@ class _CoursPageState extends State<CoursPage> {
                             });
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erreur lors de la creation du cours'),));
                           }
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> CoursPage()));
+                          _coursController.fetchUserCourses();
+                          //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> CoursPage()));
+                          //_coursController.fetchUserCourses();
+                          Navigator.of(context).pop();
+                          setState((){
+                            _coursController.fetchUserCourses();
+                          });
                         }
                       }
                   ),
