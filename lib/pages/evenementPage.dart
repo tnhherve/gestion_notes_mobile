@@ -8,6 +8,13 @@ class EvenementPage extends StatefulWidget {
 class _EvenementPageState extends State<EvenementPage> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Evenements"),
+      ),
+      body: Container(
+
+      ),
+    );
   }
 }

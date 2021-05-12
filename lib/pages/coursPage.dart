@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:gestion_notes/components/CoursDelete.dart';
 import 'package:gestion_notes/controllers/coursController.dart';
+import 'package:gestion_notes/controllers/evaluationController.dart';
+import 'package:gestion_notes/pages/evaluationPage.dart';
 import 'package:gestion_notes/services/api_manager.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
@@ -15,6 +17,8 @@ class CoursPage extends StatefulWidget {
 class _CoursPageState extends State<CoursPage> {
 
   CoursController _coursController = Get.put(CoursController());
+  EvaluationController _evaluationController = Get.put(EvaluationController());
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   TextEditingController _nomCoursTextEditingController = TextEditingController();
@@ -78,10 +82,11 @@ class _CoursPageState extends State<CoursPage> {
                       leading: Image.asset("assets/images/book.png", height: 70, ),
                       title: Text(_coursController.coursList.value.data[index].nomCours),
                       subtitle: Text("Seuil de reussite: ${_coursController.coursList.value.data[index].seuilReussite}%"),
-                      trailing: Icon(Icons.more_vert),
+
                       isThreeLine: true,
                       onTap: (){
-                        print("echo");
+                        _evaluationController.getEvaluationsCours(_coursController.coursList.value.data[index].id);
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> EvaluationPage(idCours: _coursController.coursList.value.data[index].id)),);
                       },
                     ),
                   )

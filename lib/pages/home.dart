@@ -5,6 +5,7 @@ import 'package:gestion_notes/controllers/coursController.dart';
 import 'package:gestion_notes/controllers/userControllers.dart';
 import 'package:gestion_notes/models/user.dart';
 import 'package:gestion_notes/pages/coursPage.dart';
+import 'package:gestion_notes/pages/evenementPage.dart';
 import 'package:gestion_notes/pages/login.dart';
 import 'package:gestion_notes/services/api_manager.dart';
 import 'package:gestion_notes/style/theme.dart' as Style;
@@ -92,13 +93,19 @@ class _HomePageState extends State<HomePage> {
             ),
 
             Card(
-              child: Column(
-                children: [
-                  Image.asset(
-                    "assets/images/board.png", height: 123,
-                  ),
-                  Text("Planning")
-                ],
+              child: InkWell(
+                onTap: (){
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context)=> EvenementPage()));
+                },
+                child: Column(
+                  children: [
+                    Image.asset(
+                      "assets/images/board.png", height: 123,
+                    ),
+                    Text("Evenements")
+                  ],
+                ),
               ),
             ),
             Card(
