@@ -258,8 +258,33 @@ class API_Manager {
     return evaluations;
   }
 
-  Future<EvenementResponse> getEvenementUser() async{
+  Future<EvenementResponse> getEvenementUser(int id) async{
+    final Uri baseUrl =
+    Uri.parse(BASE_URL+"/users/${id}/evenements");
+    var response = await http.get(
+        baseUrl,
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.acceptHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer ${await getToken()}",
+        }
+    );
+    var evenements = null;
 
+    if (response.statusCode == 200){
+      var jsonString = response.body;
+      var jsonMap = convert.jsonDecode(jsonString);
+      //print(jsonMap);
+      evenements = EvenementResponse.fromJson(jsonMap);
+      //print(cours);
+    }
+    else{
+      var jsonString = response.body;
+      var jsonMap = convert.jsonDecode(jsonString);
+      print(jsonMap);
+    }
+
+    return evenements;
   }
 
 }
