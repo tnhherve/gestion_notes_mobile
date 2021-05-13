@@ -92,14 +92,19 @@ class _HomePageState extends State<HomePage> {
             ),
 
             Card(
-              child: Column(
-                children: [
-                  Image.asset(
-                    "assets/images/board.png", height: 123,
-                  ),
-                  Text("Planning")
-                ],
-              ),
+              child: InkWell(
+                onTap: (){
+
+                },
+                child: Column(
+                  children: [
+                    Image.asset(
+                      "assets/images/board.png", height: 123,
+                    ),
+                    Text("evenements")
+                  ],
+                ),
+              )
             ),
             Card(
               child: Column(

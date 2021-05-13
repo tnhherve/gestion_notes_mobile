@@ -258,9 +258,9 @@ class API_Manager {
     return evaluations;
   }
 
-  Future<EvenementResponse> getEvenementUser(int id) async{
+  Future<EvenementResponse> getEvenementUser() async{
     final Uri baseUrl =
-    Uri.parse(BASE_URL+"/users/${id}/evenements");
+    Uri.parse(BASE_URL+"/users/evenements");
     var response = await http.get(
         baseUrl,
         headers: {
@@ -276,7 +276,6 @@ class API_Manager {
       var jsonMap = convert.jsonDecode(jsonString);
       //print(jsonMap);
       evenements = EvenementResponse.fromJson(jsonMap);
-      //print(cours);
     }
     else{
       var jsonString = response.body;
