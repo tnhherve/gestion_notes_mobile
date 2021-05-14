@@ -263,12 +263,9 @@ class _CoursPageState extends State<CoursPage> {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erreur lors de la creation du cours'),));
                           }
                           _coursController.fetchUserCourses();
-                          //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> CoursPage()));
-                          //_coursController.fetchUserCourses();
-                          Navigator.of(context).pop();
-                          setState((){
-                            _coursController.fetchUserCourses();
-                          });
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=> CoursPage()));
+                          _coursController.fetchUserCourses();
+
                         }
                       }
                   ),

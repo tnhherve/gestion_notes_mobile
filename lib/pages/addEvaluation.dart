@@ -316,9 +316,8 @@ class _AddEvaluationPageState extends State<AddEvaluationPage> {
 
                                   print(message);
                                   if (message){
-                                    //await storage.write(key: "token", value: message);
-                                    Navigator.pushReplacement(context,
-                                        new MaterialPageRoute(builder: (context)=> new EvaluationPage(idCours: widget.idCours,)));
+                                    _evaluationController.getEvaluationsCours(widget.idCours);
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=> EvaluationPage(idCours: widget.idCours,)));
                                   }
                                   else{
                                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erreur lors de la creation de compte'),));

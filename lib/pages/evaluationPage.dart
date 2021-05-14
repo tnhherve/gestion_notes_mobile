@@ -20,14 +20,11 @@ class EvaluationPage extends StatefulWidget {
 class _EvaluationPageState extends State<EvaluationPage> {
   EvaluationController _evaluationController = Get.put(EvaluationController());
 
-  var evalList = EvaluationResponse();
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    evalList = _evaluationController.evaluations.value;
-    print(evalList);
+    _evaluationController.getEvaluationsCours(widget.idCours);
   }
   
   @override

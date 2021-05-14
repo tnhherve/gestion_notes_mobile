@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   children: [
                   Image.asset(
-                  "assets/images/book.png", height: 123,
+                  "assets/images/cours.png", height: 123,
                   ),
                   Text("Courses")
                   ],
@@ -101,7 +101,7 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   children: [
                     Image.asset(
-                      "assets/images/board.png", height: 123,
+                      "assets/images/event.png", height: 123,
                     ),
                     Text("Evenements")
                   ],
@@ -112,9 +112,9 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: [
                   Image.asset(
-                    "assets/images/programming.png", height: 123,
+                    "assets/images/stat.png", height: 123,
                   ),
-                  Text("Code")
+                  Text("Statistiques")
                 ],
               ),
             ),
@@ -122,7 +122,7 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: [
                   Image.asset(
-                    "assets/images/board.png", height: 123,
+                    "assets/images/test.png", height: 123,
                   ),
                   Text("Autres")
                 ],
