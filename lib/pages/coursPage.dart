@@ -8,6 +8,7 @@ import 'package:gestion_notes/pages/evaluationPage.dart';
 import 'package:gestion_notes/services/api_manager.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 class CoursPage extends StatefulWidget {
   @override
@@ -80,11 +81,20 @@ class _CoursPageState extends State<CoursPage> {
                     ),
                     child: ListTile(
                       leading: Image.asset("assets/images/book.png", height: 70, ),
-                      title: Text(_coursController.coursList.value.data[index].nomCours),
-                      subtitle: Text("Seuil de reussite: ${_coursController.coursList.value.data[index].seuilReussite}%"),
+                      title: Text(_coursController.coursList.value.data[index].nomCours+""),
+                      subtitle: Text("\nSeuil : ${_coursController.coursList.value.data[index].seuilReussite}%"),
+                      trailing: CircularPercentIndicator(
+                        radius: 50,
+                        center: Text("60%"),
+                        animation: true,
+                        percent: 0.60,
+                        lineWidth: 4.0,
+                        progressColor: Colors.green,
 
+                      ),
                       isThreeLine: true,
                       onTap: (){
+                        print(_coursController.coursList.value.data[index].id);
                         _evaluationController.getEvaluationsCours(_coursController.coursList.value.data[index].id);
                         Navigator.push(context, MaterialPageRoute(builder: (context)=> EvaluationPage(idCours: _coursController.coursList.value.data[index].id)),);
                       },

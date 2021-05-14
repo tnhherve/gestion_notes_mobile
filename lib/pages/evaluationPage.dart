@@ -1,5 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gestion_notes/controllers/evaluationController.dart';
+import 'package:gestion_notes/models/evaluation.dart';
+import 'package:gestion_notes/pages/addEvaluation.dart';
 import 'package:get/get.dart';
 
 class EvaluationPage extends StatefulWidget {
@@ -17,11 +20,14 @@ class EvaluationPage extends StatefulWidget {
 class _EvaluationPageState extends State<EvaluationPage> {
   EvaluationController _evaluationController = Get.put(EvaluationController());
 
+  var evalList = EvaluationResponse();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _evaluationController.getEvaluationsCours(widget.idCours);
+    evalList = _evaluationController.evaluations.value;
+    print(evalList);
   }
   
   @override
@@ -33,6 +39,7 @@ class _EvaluationPageState extends State<EvaluationPage> {
       ),
       body: Container(
         padding: EdgeInsets.all(8.0),
+
         child: Obx(()=> ListView.builder(
           itemCount: _evaluationController.evaluations.value.data.length,
           itemBuilder: (context, index){
@@ -55,10 +62,16 @@ class _EvaluationPageState extends State<EvaluationPage> {
                   ),
                 ),
                 child: ListTile(
-                  leading: Image.asset("assets/images/cours.png", height: 70, ),
+                  leading: Image.asset("assets/images/evaluations.png", height: 100, ),
                   title: Text(_evaluationController.evaluations.value.data[index].titre),
-                  subtitle: Text(_evaluationController.evaluations.value.data[index].note),
+                  subtitle: Text("\n"+
+                    "Pond: "+_evaluationController.evaluations.value.data[index].ponderation+"%"),
                   isThreeLine: true,
+                  dense: false,
+                  trailing: Text(
+                      _evaluationController.evaluations.value.data[index].note+"%",
+                          style: TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
+                  ),
                   onTap: (){
 
                   },
@@ -67,7 +80,16 @@ class _EvaluationPageState extends State<EvaluationPage> {
             );
           })
         ),
-      )
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: (){
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context)=> AddEvaluationPage(idCours: widget.idCours,) ));
+        },
+        icon: Icon(Icons.add),
+        backgroundColor: Colors.blue,
+        label: Text("Ajouter"),
+      ),
     );
   }
 }

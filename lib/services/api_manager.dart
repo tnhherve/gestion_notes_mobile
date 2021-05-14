@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gestion_notes/models/cours.dart';
 import 'package:gestion_notes/models/evaluation.dart';
 import 'package:gestion_notes/models/evenement.dart';
+import 'package:gestion_notes/models/typeEvaluation.dart';
 import 'package:gestion_notes/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
@@ -245,7 +246,7 @@ class API_Manager {
     if (response.statusCode == 200){
       var jsonString = response.body;
       var jsonMap = convert.jsonDecode(jsonString);
-      print(jsonMap);
+
       evaluations = EvaluationResponse.fromJson(jsonMap);
       //print(cours);
     }
@@ -285,6 +286,69 @@ class API_Manager {
     }
 
     return evenements;
+  }
+
+  Future<bool> addEvaluation(String titre, double note, double ponderation, String dateE, int typeE, int coursId) async{
+    final Uri baseUrl =
+    Uri.parse(BASE_URL+"/evaluations");
+    var response = await http.post(
+        baseUrl,
+        body: {
+          "titre": titre,
+          "note": note.toString(),
+          "ponderation": ponderation.toString(),
+          "date_evaluation": dateE,
+          "type_evaluation_id": typeE.toString(),
+          "cours_id": coursId.toString()
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: "Bearer ${await getToken()}",
+        }
+    );
+    bool eval = false;
+    print("${baseUrl}/${await getToken()}");
+    if (response.statusCode == 200){
+      var jsonString = response.body;
+      var jsonMap = convert.jsonDecode(jsonString);
+      print(jsonMap);
+      eval = true;
+    }
+    else{
+      var jsonString = response.body;
+      var jsonMap = convert.jsonDecode(jsonString);
+      print(jsonMap);
+    }
+
+    return eval;
+  }
+
+  Future<TypeEvaluationResponse> getTypeEvaluation() async{
+    final Uri baseUrl =
+    Uri.parse(BASE_URL+"/typeEvaluations");
+    var response = await http.get(
+        baseUrl,
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.acceptHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer ${await getToken()}",
+        }
+    );
+    var type = null;
+
+    if (response.statusCode == 200){
+      var jsonString = response.body;
+      var jsonMap = convert.jsonDecode(jsonString);
+      //print(jsonMap);
+      type = TypeEvaluationResponse.fromJson(jsonMap);
+      //print(cours);
+    }
+    else{
+      var jsonString = response.body;
+      var jsonMap = convert.jsonDecode(jsonString);
+      print(jsonMap);
+    }
+
+    return type;
   }
 
 }
