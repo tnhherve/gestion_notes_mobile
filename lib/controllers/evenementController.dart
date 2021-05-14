@@ -11,6 +11,7 @@ class EvenementController extends GetxController{
     EvenementResponse event = await API_Manager().getEvenementUser();
     if(event != null){
       evenements = event.obs;
+      print(evenements);
     }
   }
 

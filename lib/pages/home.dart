@@ -5,6 +5,7 @@ import 'package:gestion_notes/controllers/coursController.dart';
 import 'package:gestion_notes/controllers/userControllers.dart';
 import 'package:gestion_notes/models/user.dart';
 import 'package:gestion_notes/pages/coursPage.dart';
+import 'package:gestion_notes/pages/evenementPage.dart';
 import 'package:gestion_notes/pages/login.dart';
 import 'package:gestion_notes/services/api_manager.dart';
 import 'package:gestion_notes/style/theme.dart' as Style;
@@ -83,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   children: [
                   Image.asset(
-                  "assets/images/book.png", height: 123,
+                  "assets/images/cours.png", height: 123,
                   ),
                   Text("Courses")
                   ],
@@ -94,25 +95,26 @@ class _HomePageState extends State<HomePage> {
             Card(
               child: InkWell(
                 onTap: (){
-
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context)=> EvenementPage()));
                 },
                 child: Column(
                   children: [
                     Image.asset(
-                      "assets/images/board.png", height: 123,
+                      "assets/images/event.png", height: 123,
                     ),
-                    Text("evenements")
+                    Text("Evenements")
                   ],
                 ),
-              )
+              ),
             ),
             Card(
               child: Column(
                 children: [
                   Image.asset(
-                    "assets/images/programming.png", height: 123,
+                    "assets/images/stat.png", height: 123,
                   ),
-                  Text("Code")
+                  Text("Statistiques")
                 ],
               ),
             ),
@@ -120,7 +122,7 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: [
                   Image.asset(
-                    "assets/images/board.png", height: 123,
+                    "assets/images/test.png", height: 123,
                   ),
                   Text("Autres")
                 ],

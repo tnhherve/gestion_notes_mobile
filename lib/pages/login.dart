@@ -24,21 +24,26 @@ class Login extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // Image.asset(
-          //   "assets/images/arriere2.jpg",
-          //   fit: BoxFit.cover,
-          //   width: double.infinity,
-          //   height: double.infinity,
-          // ),
+          Container(
+            padding: const EdgeInsets.all(20),
+            height: 250,
+            child: Image.asset(
+              "assets/images/logoFinal.png",
+              fit: BoxFit.fill,
+              height: 300,
+              width: 400,
+              alignment: Alignment.center ,
+            ),
+          ),
           Padding(
-            padding: const EdgeInsets.only(right: 20.0, left: 20.0, top: 80.0),
+            padding: const EdgeInsets.only(right: 20.0, left: 20.0, top: 150.0),
             child: Form(
               key: _formKey,
               child: ListView(
                 children: [
                   Container(
                       height: 100.0,
-                      padding: EdgeInsets.only(bottom: 20.0, top: 30.0),
+                      padding: EdgeInsets.only(bottom: 10.0, top: 50.0),
                       child: ListView(
                         // mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -51,20 +56,11 @@ class Login extends StatelessWidget {
                                   fontSize: 24.0),
                             ),
                           ),
-                          SizedBox(
-                            height: 5.0,
-                          ),
-                          Center(
-                            child: Text(
-                              "By groupe 2",
-                              style: TextStyle(
-                                  fontSize: 10.0, color: Style.Colors.mainColor),
-                            ),
-                          )
+
                         ],
                       )),
                   SizedBox(
-                    height: 5.0,
+                    height: 1.0,
                   ),
                   TextFormField(
                     style: TextStyle(

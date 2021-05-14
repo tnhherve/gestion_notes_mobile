@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:gestion_notes/components/CoursDelete.dart';
 import 'package:gestion_notes/controllers/coursController.dart';
+import 'package:gestion_notes/controllers/evaluationController.dart';
+import 'package:gestion_notes/pages/evaluationPage.dart';
 import 'package:gestion_notes/services/api_manager.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 class CoursPage extends StatefulWidget {
   @override
@@ -15,6 +18,8 @@ class CoursPage extends StatefulWidget {
 class _CoursPageState extends State<CoursPage> {
 
   CoursController _coursController = Get.put(CoursController());
+  EvaluationController _evaluationController = Get.put(EvaluationController());
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   TextEditingController _nomCoursTextEditingController = TextEditingController();
@@ -76,12 +81,22 @@ class _CoursPageState extends State<CoursPage> {
                     ),
                     child: ListTile(
                       leading: Image.asset("assets/images/book.png", height: 70, ),
-                      title: Text(_coursController.coursList.value.data[index].nomCours),
-                      subtitle: Text("Seuil de reussite: ${_coursController.coursList.value.data[index].seuilReussite}%"),
-                      trailing: Icon(Icons.more_vert),
+                      title: Text(_coursController.coursList.value.data[index].nomCours+""),
+                      subtitle: Text("\nSeuil : ${_coursController.coursList.value.data[index].seuilReussite}%"),
+                      trailing: CircularPercentIndicator(
+                        radius: 50,
+                        center: Text("60%"),
+                        animation: true,
+                        percent: 0.60,
+                        lineWidth: 4.0,
+                        progressColor: Colors.green,
+
+                      ),
                       isThreeLine: true,
                       onTap: (){
-                        print("echo");
+                        print(_coursController.coursList.value.data[index].id);
+                        _evaluationController.getEvaluationsCours(_coursController.coursList.value.data[index].id);
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> EvaluationPage(idCours: _coursController.coursList.value.data[index].id)),);
                       },
                     ),
                   )
@@ -248,12 +263,9 @@ class _CoursPageState extends State<CoursPage> {
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erreur lors de la creation du cours'),));
                           }
                           _coursController.fetchUserCourses();
-                          //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> CoursPage()));
-                          //_coursController.fetchUserCourses();
-                          Navigator.of(context).pop();
-                          setState((){
-                            _coursController.fetchUserCourses();
-                          });
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=> CoursPage()));
+                          _coursController.fetchUserCourses();
+
                         }
                       }
                   ),
