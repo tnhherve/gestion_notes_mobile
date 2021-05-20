@@ -1,10 +1,11 @@
-import 'dart:ffi';
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gestion_notes/models/cours.dart';
 import 'package:gestion_notes/models/evaluation.dart';
 import 'package:gestion_notes/models/evenement.dart';
+import 'package:gestion_notes/models/ponderation.dart';
 import 'package:gestion_notes/models/typeEvaluation.dart';
 import 'package:gestion_notes/models/user.dart';
 import 'package:http/http.dart' as http;
@@ -230,6 +231,35 @@ class API_Manager {
     return cours;
   }
 
+  Future<Ponderation> getSumPonderationCours(int id) async {
+    final Uri baseUrl =
+    Uri.parse(BASE_URL+"/user/cours/${id}/ponderation");
+    var response = await http.get(
+        baseUrl,
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.acceptHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer ${await getToken()}",
+        }
+    );
+    var ponderation = null;
+
+    if (response.statusCode == 200){
+      var jsonString = response.body;
+      var jsonMap = convert.jsonDecode(jsonString);
+      //print(jsonMap);
+      ponderation = Ponderation.fromJson(jsonMap);
+      //print(cours);
+    }
+    else{
+      var jsonString = response.body;
+      var jsonMap = convert.jsonDecode(jsonString);
+      print(jsonMap);
+    }
+
+    return ponderation;
+  }
+
   Future<EvaluationResponse> getEvaluationsCours(int id) async {
     final Uri baseUrl =
     Uri.parse(BASE_URL+"/cours/${id}/evaluations");
@@ -288,7 +318,66 @@ class API_Manager {
     return evenements;
   }
 
-  Future<bool> addEvaluation(String titre, double note, double ponderation, String dateE, int typeE, int coursId) async{
+  Future<bool> addEvent(String nom, String lieu, String dateD, String dateF) async{
+    final Uri baseUrl =
+    Uri.parse(BASE_URL+"/user/evenements");
+    var response = await http.post(
+        baseUrl,
+        body: {
+          "nom_evenement": nom,
+          "date_debut": dateD,
+          "date_fin": dateF,
+          "lieux": lieu
+        },
+        headers: {
+          HttpHeaders.authorizationHeader: "Bearer ${await getToken()}",
+        }
+    );
+    bool etat = false;
+    print("${baseUrl}/${await getToken()}");
+    if (response.statusCode == 200){
+      var jsonString = response.body;
+      var jsonMap = convert.jsonDecode(jsonString);
+      print(jsonMap);
+      etat = true;
+    }
+    else{
+      var jsonString = response.body;
+      var jsonMap = convert.jsonDecode(jsonString);
+      print(jsonMap);
+    }
+
+    return etat;
+  }
+
+  Future<Evenement> deleteEvent(int id) async {
+    final Uri baseUrl =
+    Uri.parse(BASE_URL+"/evenements/${id}");
+    var response = await http.delete(
+        baseUrl,
+        headers: {
+          HttpHeaders.authorizationHeader: "Bearer ${await getToken()}",
+        }
+    );
+    var event = null;
+    print(response.statusCode);
+    print("${baseUrl}/${await getToken()}");
+    if (response.statusCode == 200){
+      var jsonString = response.body;
+      var jsonMap = convert.jsonDecode(jsonString);
+      print(jsonMap);
+      event = Evenement.fromJson(jsonMap['data']);
+    }
+    else{
+      var jsonString = response.body;
+      var jsonMap = convert.jsonDecode(jsonString);
+      print(jsonMap);
+    }
+
+    return event;
+  }
+
+  Future<bool> addEvaluation(String titre, double note, double ponderation, String dateE, String typeE, int coursId) async{
     final Uri baseUrl =
     Uri.parse(BASE_URL+"/evaluations");
     var response = await http.post(
@@ -298,7 +387,7 @@ class API_Manager {
           "note": note.toString(),
           "ponderation": ponderation.toString(),
           "date_evaluation": dateE,
-          "type_evaluation_id": typeE.toString(),
+          "type_evaluation": typeE,
           "cours_id": coursId.toString()
         },
         headers: {

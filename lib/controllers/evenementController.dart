@@ -15,6 +15,28 @@ class EvenementController extends GetxController{
     }
   }
 
+  Future<bool> addEvent(String nom, String lieu, String dateD, String dateF) async{
+    bool response = await API_Manager().addEvent(nom, lieu, dateD, dateF);
+
+    if (response) {
+      getEvenementUser();
+      update();
+      return true;
+    }
+    else
+      return false;
+  }
+
+  Future<bool> deleteEvent(int id) async{
+    Evenement event = await API_Manager().deleteEvent(id);
+    if (event != null){
+      evenements.value.data.remove(event.obs.value);
+      return true;
+    }
+    else
+      return false;
+  }
+
   @override
   void onInit() {
     // TODO: implement onInit

@@ -12,11 +12,11 @@ class EvaluationController extends GetxController{
     EvaluationResponse evaluationResponse = await API_Manager().getEvaluationsCours(id);
     if (evaluationResponse != null){
       evaluations = evaluationResponse.obs;
-      print(evaluationResponse);
+
     }
   }
 
-  Future<bool> addEvaluation(String titre, double note, double ponderation, String dateE, int typeE, int coursId) async{
+  Future<bool> addEvaluation(String titre, double note, double ponderation, String dateE, String typeE, int coursId) async{
 
     bool eval = await API_Manager().addEvaluation(titre, note, ponderation, dateE, typeE, coursId);
     if(eval){
@@ -32,7 +32,7 @@ class EvaluationController extends GetxController{
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    getEvaluationsCours(_coursController.coursList.value.data[0].id);
+    (_coursController.coursList.value.data!=null)??getEvaluationsCours(_coursController.coursList.value.data[0].id);
   }
 
 }

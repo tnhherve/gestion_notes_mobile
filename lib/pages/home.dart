@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:gestion_notes/controllers/coursController.dart';
+import 'package:gestion_notes/controllers/evaluationController.dart';
 import 'package:gestion_notes/controllers/userControllers.dart';
 import 'package:gestion_notes/models/user.dart';
 import 'package:gestion_notes/pages/coursPage.dart';
@@ -23,29 +24,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-   UserController userController = Get.put(UserController());
-   CoursController coursController = Get.put(CoursController());
-
-  // User user = null ;
-  //
-  // String token = "";
-  //
-  // Future<Null> getToken() async{
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   token = prefs.getString('token');
-  // }
-  //
-  // Future<Null> getUser(String toke) async{
-  //   user = await API_Manager().getUser(toke);
-  // }
-  //
-
+   UserController _userController = Get.put(UserController());
+   CoursController _coursController = Get.put(CoursController());
+   EvaluationController _evaluationController = Get.put(EvaluationController());
 
   void initState() {
     // TODO: implement initState
     super.initState();
-    userController.connectUser();
-    coursController.fetchUserCourses();
+    _userController.connectUser();
+    _coursController.fetchUserCourses();
   }
 
 
@@ -77,7 +64,7 @@ class _HomePageState extends State<HomePage> {
             Card(
               child: InkWell(
                 onTap: (){
-                  coursController.fetchUserCourses();
+                  _coursController.fetchUserCourses();
                   Navigator.of(context).push(
                       MaterialPageRoute(builder: (context)=> CoursPage()));
                 },
@@ -137,18 +124,18 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.zero,
           children: [
             Obx(()=> UserAccountsDrawerHeader(
-              accountName: Text((userController.user.value.nom)),
-              accountEmail: Text((userController.user.value.email)),
+              accountName: Text((_userController.user.value.nom)),
+              accountEmail: Text((_userController.user.value.email)),
               currentAccountPicture: CircleAvatar(
                   backgroundColor: Colors.white,
-                  child: (userController.user == null) ? Icon(
+                  child: (_userController.user == null) ? Icon(
                     EvaIcons.personOutline,
                     color: Style.Colors.loginGradientEnd,
                   ):Container(
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                            image: NetworkImage((userController.user.value.avatar==null)?"null":userController.user.value.avatar),
+                            image: NetworkImage((_userController.user.value.avatar==null)?"null":_userController.user.value.avatar),
                             fit: BoxFit.fill
                         )
                     ),
@@ -206,6 +193,8 @@ class _HomePageState extends State<HomePage> {
                 //bool reponse = false;
                 bool reponse = await API_Manager().logout(await API_Manager.getToken());
                 if (reponse){
+                  _coursController.coursList.value.data = [];
+                  _evaluationController.evaluations.value.data = [];
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Deconnexion...'),));
 
                   Loader.show(context,

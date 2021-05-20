@@ -1,9 +1,20 @@
 import 'package:gestion_notes/models/cours.dart';
+import 'package:gestion_notes/models/ponderation.dart';
 import 'package:gestion_notes/services/api_manager.dart';
 import 'package:get/get.dart';
 
 class CoursController extends GetxController{
+
   var coursList = CoursResponse().obs;
+  var pond = Ponderation().obs;
+
+  void getSumPonderation(int id) async {
+    Ponderation ponderation = await API_Manager().getSumPonderationCours(id);
+    if(ponderation!=null){
+      pond = ponderation.obs;
+      print(pond);
+    }
+  }
 
   void fetchUserCourses() async {
     CoursResponse cours = await API_Manager().getUserCourses();
@@ -40,6 +51,7 @@ class CoursController extends GetxController{
 
   @override
   void onInit() {
+    update();
     // TODO: implement onInit
     super.onInit();
     fetchUserCourses();

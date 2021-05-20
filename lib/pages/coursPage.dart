@@ -4,6 +4,7 @@ import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:gestion_notes/components/CoursDelete.dart';
 import 'package:gestion_notes/controllers/coursController.dart';
 import 'package:gestion_notes/controllers/evaluationController.dart';
+import 'package:gestion_notes/models/ponderation.dart';
 import 'package:gestion_notes/pages/evaluationPage.dart';
 import 'package:gestion_notes/services/api_manager.dart';
 import 'package:get/get.dart';
@@ -26,83 +27,117 @@ class _CoursPageState extends State<CoursPage> {
   TextEditingController _sectionTextEditingController = TextEditingController();
   TextEditingController _seuilTextEditingController = TextEditingController();
 
+
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _coursController.fetchUserCourses();
+
   }
 
+
+
+  Future<String> getSumP(int id) async{
+    Ponderation ponderation = await API_Manager().getSumPonderationCours(id);
+    String pond = ponderation.sommePonderationEvaluation;
+    print(pond);
+    return pond;
+
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Cours"),),
-      body: Container(
-          padding: EdgeInsets.all(8),
-          child: Obx(()=> ListView.builder(
-            padding: const EdgeInsets.all(5.0),
-              itemCount: _coursController.coursList.value.data.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  child: Dismissible(
-                    key: ValueKey(_coursController.coursList.value.data[index]),
-                    direction: DismissDirection.startToEnd,
-                    onDismissed: (direction) async {
-                      bool delete = await _coursController.deleteCours(_coursController.coursList.value.data[index].id);
-                      if (delete) {
-                        await _coursController.fetchUserCourses();
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                              'cours ${_coursController.coursList.value
-                                  .data[index].nomCours} supprimer'),));
-                      }else {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('Erreur lors de la suppression'),));
-                      }
+      appBar: AppBar(title: Text("Cours" ),),
+      body: ListView(
+        children: [
+          Container(
+            height: 80,
+            width: 100,
+            child: Card(
+              color: Colors.lightBlueAccent,
+              elevation: 10,
+              child: Center(
+                child: Text((_coursController.coursList.value.data.isEmpty?"0":"Total: "+_coursController.coursList.value.data.length.toString()), style: TextStyle(fontSize: 30),),
+              ),
+            ),
+          ),
+          Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Center(child: Text("liste des cours", style: TextStyle(fontWeight: FontWeight.bold),)),
+          ),
+          Container(
+              padding: EdgeInsets.all(8),
+              child: (_coursController.coursList.value.data.isEmpty)?Center(child: Text("empty")) : Obx(()=> ListView.builder(
+                  shrinkWrap: true,
+                  physics: ScrollPhysics(),
+                  padding: const EdgeInsets.all(5.0),
+                  itemCount: _coursController.coursList.value.data.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                        child: Dismissible(
+                          key: ValueKey(_coursController.coursList.value.data[index]),
+                          direction: DismissDirection.startToEnd,
+                          onDismissed: (direction) async {
+                            bool delete = await _coursController.deleteCours(_coursController.coursList.value.data[index].id);
+                            if (delete) {
+                              await _coursController.fetchUserCourses();
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                    'cours ${_coursController.coursList.value
+                                        .data[index].nomCours} supprimer'),));
+                            }else {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text('Erreur lors de la suppression'),));
+                            }
 
-                    },
-                    confirmDismiss: (direction) async {
-                      final result = await showDialog(
-                          context: context, builder: (_) => CoursDelete());
-                      print(result);
-                      return result;
-                    },
-                    background: Container(
-                      color: Colors.red,
-                      padding: EdgeInsets.only(left: 16),
-                      child: Align(
-                        child: Icon(
-                          Icons.delete,
-                          color: Colors.white,
-                        ),
-                        alignment: Alignment.centerLeft,
-                      ),
-                    ),
-                    child: ListTile(
-                      leading: Image.asset("assets/images/book.png", height: 70, ),
-                      title: Text(_coursController.coursList.value.data[index].nomCours+""),
-                      subtitle: Text("\nSeuil : ${_coursController.coursList.value.data[index].seuilReussite}%"),
-                      trailing: CircularPercentIndicator(
-                        radius: 50,
-                        center: Text("60%"),
-                        animation: true,
-                        percent: 0.60,
-                        lineWidth: 4.0,
-                        progressColor: Colors.green,
+                          },
+                          confirmDismiss: (direction) async {
+                            final result = await showDialog(
+                                context: context, builder: (_) => CoursDelete());
+                            print(result);
+                            return result;
+                          },
+                          background: Container(
+                            color: Colors.red,
+                            padding: EdgeInsets.only(left: 16),
+                            child: Align(
+                              child: Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
+                              alignment: Alignment.centerLeft,
+                            ),
+                          ),
+                          child: ListTile(
+                            leading: Image.asset("assets/images/book.png", height: 70, ),
+                            title: Text(_coursController.coursList.value.data[index].nomCours+""),
+                            subtitle: Text("\nSeuil : ${_coursController.coursList.value.data[index].seuilReussite}%"),
+                            trailing: CircularPercentIndicator(
+                              radius: 50,
+                              center: Text("${ getSumP(_coursController.coursList.value.data[index].id)}%"),
+                              animation: true,
+                              percent: _coursController.coursList.value.data[index].id/100,
+                              lineWidth: 4.0,
+                              progressColor: Colors.green,
 
-                      ),
-                      isThreeLine: true,
-                      onTap: (){
-                        print(_coursController.coursList.value.data[index].id);
-                        _evaluationController.getEvaluationsCours(_coursController.coursList.value.data[index].id);
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> EvaluationPage(idCours: _coursController.coursList.value.data[index].id)),);
-                      },
-                    ),
-                  )
-                );
-              }),
-          )
+                            ),
+                            isThreeLine: true,
+                            onTap: (){
+
+                              _evaluationController.getEvaluationsCours(_coursController.coursList.value.data[index].id);
+                              Get.to(EvaluationPage(idCours: _coursController.coursList.value.data[index].id));
+                              //Navigator.push(context, MaterialPageRoute(builder: (context)=> EvaluationPage(idCours: _coursController.coursList.value.data[index].id)),);
+                            },
+                          ),
+                        )
+                    );
+                  }),
+              )
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: (){
@@ -262,9 +297,10 @@ class _CoursPageState extends State<CoursPage> {
                             });
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erreur lors de la creation du cours'),));
                           }
-                          _coursController.fetchUserCourses();
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=> CoursPage()));
-                          _coursController.fetchUserCourses();
+
+                          Get.off(CoursPage());
+                          //Navigator.push(context, MaterialPageRoute(builder: (context)=> CoursPage()));
+
 
                         }
                       }

@@ -39,7 +39,7 @@ dependencies:
   percent_indicator: ^3.0.1
   select_form_field: ^2.0.0
   multiselect_formfield: ^0.1.6
-
+  grouped_list: ^4.0.0
 
 dev_dependencies:
   flutter_test:
