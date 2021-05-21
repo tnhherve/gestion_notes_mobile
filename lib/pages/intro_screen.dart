@@ -24,7 +24,7 @@ class _IntroScreenState extends State<IntroScreen> {
       titleWidget: Column(
         children: <Widget>[
           Text(
-            'FREE GIFT',
+            "FACILE D'UTILISATION",
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
           SizedBox(
@@ -40,7 +40,7 @@ class _IntroScreenState extends State<IntroScreen> {
         ],
       ),
       body:
-          "Free gifts with purchase. Offer free gifts like a gift wrap, gift card, or any free product.",
+          "Une application intuitive avec un tableau de board facile d'utilisation",
       image: Center(child: SvgPicture.asset("assets/icons/gift.svg")),
       decoration: const PageDecoration(
           pageColor: Colors.white,
@@ -55,7 +55,7 @@ class _IntroScreenState extends State<IntroScreen> {
       titleWidget: Column(
         children: <Widget>[
           Text(
-            'PAYMENT INTEGRATION',
+            'VOUS NOTES A PORTER DE MAIN',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 18.0,
@@ -75,7 +75,7 @@ class _IntroScreenState extends State<IntroScreen> {
         ],
       ),
       body:
-          "A payment gateway as a merchant service that processes credit card payments for ecommerce sites and traditional brick and mortar stores.",
+          "En deux trois cliques, vous pouvez ajouter vous notes aux differents evaluations et avoir une vue sur votre avancement.",
       image: Center(
           child: SizedBox(
         width: 450.0,
@@ -94,7 +94,7 @@ class _IntroScreenState extends State<IntroScreen> {
       titleWidget: Column(
         children: <Widget>[
           Text(
-            'CALL CENTER',
+            'DISPONIBLE 24H/24',
             style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
           ),
           SizedBox(
@@ -110,7 +110,7 @@ class _IntroScreenState extends State<IntroScreen> {
         ],
       ),
       body:
-          "Call center gives a small business a big business feel. 24-hour sales, order entry, payment processing, billing inquiries, and more.",
+          "Ou que vous soyez, vous avez un accès exclusif à vous données de façon securisé via internet.",
       image: Center(
           child: SizedBox(
         width: 450.0,

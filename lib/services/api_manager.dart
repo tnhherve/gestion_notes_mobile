@@ -271,14 +271,15 @@ class API_Manager {
           HttpHeaders.authorizationHeader: "Bearer ${await getToken()}",
         }
     );
+    print("${baseUrl}/${await getToken()}");
     var evaluations = null;
 
     if (response.statusCode == 200){
       var jsonString = response.body;
       var jsonMap = convert.jsonDecode(jsonString);
-
+      print(jsonMap);
       evaluations = EvaluationResponse.fromJson(jsonMap);
-      //print(cours);
+      print(evaluations);
     }
     else{
       var jsonString = response.body;

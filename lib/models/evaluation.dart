@@ -23,7 +23,7 @@ class EvaluationResponse {
   bool status;
   int totalEvaluation;
   int totalNote;
-  int moyenne;
+  double moyenne;
   Cours cours;
   List<Evaluation> data;
 

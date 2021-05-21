@@ -27,6 +27,7 @@ class _CoursPageState extends State<CoursPage> {
   TextEditingController _sectionTextEditingController = TextEditingController();
   TextEditingController _seuilTextEditingController = TextEditingController();
 
+  var data = null;
 
 
   @override
@@ -117,7 +118,7 @@ class _CoursPageState extends State<CoursPage> {
                             subtitle: Text("\nSeuil : ${_coursController.coursList.value.data[index].seuilReussite}%"),
                             trailing: CircularPercentIndicator(
                               radius: 50,
-                              center: Text("${ getSumP(_coursController.coursList.value.data[index].id)}%"),
+                              center: Text("${_coursController.coursList.value.data[index].id/100}%"),
                               animation: true,
                               percent: _coursController.coursList.value.data[index].id/100,
                               lineWidth: 4.0,

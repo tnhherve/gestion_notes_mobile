@@ -23,15 +23,7 @@ class EvaluationPage extends StatefulWidget {
 class _EvaluationPageState extends State<EvaluationPage> {
   EvaluationController _evaluationController = Get.put(EvaluationController());
 
-  List _elements = [
-    {'name': 'John', 'group': 'Team A'},
-    {'name': 'Will', 'group': 'Team B'},
-    {'name': 'Beth', 'group': 'Team A'},
-    {'name': 'Miranda', 'group': 'Team B'},
-    {'name': 'Mike', 'group': 'Team C'},
-    {'name': 'Danny', 'group': 'Team C'},
-  ];
-  List eval = [];
+  List _elements = null;
   @override
   void initState() {
     // TODO: implement initState
@@ -39,13 +31,10 @@ class _EvaluationPageState extends State<EvaluationPage> {
     print(widget.idCours);
     _evaluationController.getEvaluationsCours(widget.idCours);
     var evalu = _evaluationController.evaluations.value.data;
-    // for(var i = 0; i < evalu.length; i++){
-    //   this.eval.add(evalu[i]);
-    // }
-
+    print(evalu);
     _elements = jsonDecode(jsonEncode(evalu));
     print(_elements);
-    //print(jsonDecode(jsonEncode(evalu)));
+    print(jsonDecode(jsonEncode(evalu)));
   }
   
   @override

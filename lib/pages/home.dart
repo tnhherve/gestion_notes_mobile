@@ -193,8 +193,7 @@ class _HomePageState extends State<HomePage> {
                 //bool reponse = false;
                 bool reponse = await API_Manager().logout(await API_Manager.getToken());
                 if (reponse){
-                  _coursController.coursList.value.data = [];
-                  _evaluationController.evaluations.value.data = [];
+                 
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Deconnexion...'),));
 
                   Loader.show(context,
